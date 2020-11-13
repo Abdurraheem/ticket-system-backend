@@ -23,8 +23,8 @@ const userSchema = mongoose.Schema({
         maxlength: 50
     },
     role : {
-        type:Number,
-        default: 0 
+        type:String,
+        enum:['Admin','SuperAdmin','User','Driver']
     },
     image: String,
     token : {
@@ -32,7 +32,11 @@ const userSchema = mongoose.Schema({
     },
     tokenExp :{
         type: Number
-    }
+    },
+    permission:[String]
+      
+    
+   
 })
 
 
