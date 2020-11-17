@@ -4,11 +4,10 @@ const { User } = require("../models/User");
 
 const { auth } = require("../middleware/auth");
 
-//=================================
-//             User
-//=================================
+
 
 router.get("/auth", auth, (req, res) => {
+   
     res.status(200).json({
         _id: req.user._id,
         isAdmin: req.user.role === 0 ? false : true,
@@ -47,21 +46,28 @@ router.post("/login", (req, res) => {
 
             user.generateToken((err, user) => {
                 if (err) return res.status(400).send(err);
+
                 res.cookie("w_authExp", user.tokenExp);
                 res
                     .cookie("w_auth", user.token)
                     .status(200)
                     .json({
-                        loginSuccess: true, userId: user._id
+                        token: user.token,
+                        loginSuccess: true, 
+                        userId: user._id
                     });
+                
             });
         });
     });
 });
 
 router.get("/logout", auth, (req, res) => {
+    console.log("backend");
     User.findOneAndUpdate({ _id: req.user._id }, { token: "", tokenExp: "" }, (err, doc) => {
         if (err) return res.json({ success: false, err });
+        res
+        .cookie("w_auth",'')
         return res.status(200).send({
             success: true
         });
@@ -69,7 +75,8 @@ router.get("/logout", auth, (req, res) => {
 });
 
 
-router.get("/getUsers",async (req, res) => {
+router.get("/getUsers",auth, async (req, res) => {
+    console.log("get users");
     User.find({},(err, users)=>{
         res.status(200).send(users);
     });

@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
     },
     role : {
         type:String,
-        enum:['Admin','SuperAdmin','User','Driver']
+        enum:['Admin','Super Admin','User','Driver']
     },
     image: String,
     token : {
